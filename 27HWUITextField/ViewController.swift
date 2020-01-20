@@ -81,6 +81,8 @@ class ViewController: UIViewController, UITextFieldDelegate {
     //MARK: IBAction
     @IBAction func clearAllTextFieldsActionButton(sender: UIButton) {
         
+        self.nameTextField.becomeFirstResponder()
+        
         for i in 0..<self.collectionTextFields.count {
             self.collectionTextFields[i].text = ""
             self.collectionLabels[i].text = ""
@@ -391,7 +393,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     
     private func formatingLogin(in textField: UITextField, range: NSRange, replacementString str: String) -> Bool {
     
-    let maxLengthSimbol = 20
+        let maxLengthSimbol = 20
     
         let validSet = CharacterSet.decimalDigits.union(CharacterSet.letters).inverted
         
