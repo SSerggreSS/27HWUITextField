@@ -40,6 +40,9 @@ import UIKit
 
 class ViewController: UIViewController, UITextFieldDelegate {
 
+    //MARK: Outlet
+    @IBOutlet weak var clearAllButton: UIButton!
+    
     //MARK: Propertys
     
     let indentElementsByVertical: CGFloat = 30.0
@@ -75,6 +78,15 @@ class ViewController: UIViewController, UITextFieldDelegate {
         
     }
     
+    //MARK: IBAction
+    @IBAction func clearAllTextFieldsActionButton(sender: UIButton) {
+        
+        for i in 0..<self.collectionTextFields.count {
+            self.collectionTextFields[i].text = ""
+            self.collectionLabels[i].text = ""
+        }
+        
+    }
     
     
     //MARK: UITextFieldDelegate
@@ -82,30 +94,24 @@ class ViewController: UIViewController, UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         print("textFieldShouldReturn textField.text = \(textField.text ?? "")")
         
-        for i in 0..<self.collectionTextFields.count {
-
-            if textField.isEqual(self.collectionTextFields[i]) && (i + 1) < self.collectionTextFields.count {
-                self.collectionTextFields[i + 1].becomeFirstResponder()
-            } else {
-                textField.resignFirstResponder()
-            }
-
+        let currentIndexTF = self.collectionTextFields.firstIndex(of: textField) ?? 0
+        let lastTF = self.collectionTextFields.last ?? UITextField()
+        
+        if textField.isEqual(lastTF) {
+            textField.resignFirstResponder()
+        } else {
+            self.collectionTextFields[currentIndexTF + 1].becomeFirstResponder()
         }
-    
+        
         return false
     }
     
     func textFieldDidChangeSelection(_ textField: UITextField) {
-        print("textFieldDidChangeSelection textField.text = \(textField.text ?? "")")
+    
+        let currentIndexTF = self.collectionTextFields.firstIndex(of: textField) ?? 0
+
+        self.collectionLabels[currentIndexTF].text = textField.text
         
-        for i in 0..<self.collectionTextFields.count {
-            
-            if self.collectionTextFields[i].isEqual(textField) {
-                
-                self.collectionLabels[i].text = textField.text
-                
-            }
-        }
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
@@ -135,7 +141,8 @@ class ViewController: UIViewController, UITextFieldDelegate {
     private func startSettings() {
         
             self.view.backgroundColor = .black
-            
+            self.clearAllButton.layer.cornerRadius = 10
+        
             self.collectionTextFields.append(self.nameTextField)
             self.collectionTextFields.append(self.lastNameTextField)
             self.collectionTextFields.append(self.loginTextField)
